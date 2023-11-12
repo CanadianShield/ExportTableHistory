@@ -1,6 +1,6 @@
-## Export historical data from Log Analtyics to a Blob Container
+## Export historical data from Log Analytics to a Blob Container
 
-Scenario used for this proof of concept: You have data retention set to 360 days (or any number of days > 90 days) in your workpace (or on a specific table). You want to reduce that number to 90 days as a way to limit cost of retention. But you want to keep the data you have for your current retention period for compliance reasons or for hunting scenarios.
+Scenario used for this proof of concept: You have data retention set to 360 days (or any number of days > 90 days) in your workplace (or on a specific table). You want to reduce that number to 90 days to limit cost of retention. But you want to keep the data you have for your current retention period for compliance reasons or for hunting scenarios.
 
 The script [`Export-History.ps1`](https://github.com/CanadianShield/ExportTableHistory/blob/main/Export-History.ps1) is creating a blob container on a specified Storage Account on which you have the Storage Blob Data Contributor role. Because the Log Analytics API has [some limits](https://learn.microsoft.com/en-us/azure/azure-monitor/service-limits#log-analytics-workspaces), the script will split the historical data in bin of 15 minutes, download the results and upload it to a container you specified. 
 
@@ -35,7 +35,7 @@ external_table('SyslogArchive')
 | summarize count(), min(TimeGenerated), max(TimeGenerated)
 ```
 
-If you already have a table with simmilar data, you can union the two in a parser (function):
+If you already have a table with similar data, you can union the two in a parser (function):
 ```
 union external_table('SyslogArchive'), Syslog
 ```
