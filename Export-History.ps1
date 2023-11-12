@@ -51,7 +51,6 @@ $Now = (Get-Date).Date #Date of reference (Today but starting at 00:00)
             $EndFormated = ($using:Now).AddDays($using:Day).AddHours($using:Hour).AddMinutes($Minute+15).ToString("yyyy-MM-ddTHH:mm:ssZ")
             $Query = "$using:Table | where TimeGenerated between ( datetime('$StartFormated').. datetime('$EndFormated')) | project-away TenantId, MG, Type"
             #Name partitionning to allow easy ADX external table partitionning mapping 
-            #$BlobFile = "y=$YearNumber/m=" + "{0:D2}" -f $MonthNumber + "/d=" + "{0:D2}" -f $DayNumber + "/h=" + "{0:D2}" -f $using:Hour + "/m=" + "{0:D2}" -f $Minute + "/backup.json"
             $BlobFile = "y=$YearNumber/m={0:D2}/d={1:D2}/h={2:D2}/m={3:D2}/PT15M.json" -f $MonthNumber, $DayNumber, $using:Hour, $Minute 
             $TempJson = New-TemporaryFile  #To store the results of the query
             $AddToLogs = $using:Logs #Get a reference for writing the Logs
@@ -70,7 +69,7 @@ $Now = (Get-Date).Date #Date of reference (Today but starting at 00:00)
                 } else {
                     Write-Output "`tStart: $StartFormated End: $EndFormated - No results, skiping the export."
                 }
-                Remove-Item  $TempJson #Remove the temp file, even if not uploaded, you can review the log to know which query to retry later
+                Remove-Item  $TempJson #Remove the temp file, even if not uploaded, you can review the log to know what query to retry later
                 $AddToLogs.Add("$((Get-Date).ToString($using:LogFileTimeFormat));$StartFormated;$EndFormated;$Query;$BlobFile;$TempJson;$ResultCount;")
             } Else {
                 $AddToLogs.Add("$((Get-Date).ToString($using:LogFileTimeFormat));$StartFormated;$EndFormated;$Query;$BlobFile;-;0;$($Kql.Error.Details.InnerError.Message)")
