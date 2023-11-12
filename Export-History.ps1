@@ -30,7 +30,7 @@ $Now = (Get-Date).Date #Date of reference (Today but starting at 00:00)
 
 #Loop for all the days until now (-1). You can adjust the -1 to 90 days as long as the BackInDays >90 days too. 
 #-$BackInDays .. -1 | ForEach-Object { 
--$BackInDays .. 90 | ForEach-Object {    
+-$BackInDays .. -90 | ForEach-Object {    
     $Day = $_
     $DayTracking = $($Now.AddDays($Day))
     Write-Progress -Activity "Query for $DayTracking" -PercentComplete (( $BackInDays + 1 + $Day ) / $BackInDays * 100 ) -Id 0
